@@ -15,7 +15,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
 
     // 🌟 Direct Browser Download Trigger
     // Hum seedha apne backend ko link bhej rahe hain GET request ke zariye
-    const backendUrl = `http://127.0.0.1:5000/api/download?url=${encodeURIComponent(url)}`;
+    const backendUrl = `https://fbvideodownloader.onrender.com/api/download?url=${encodeURIComponent(url)}`;
     
     // Ye line naya tab nahi kholegi, balke aapke browser ka apna Download Manager start kar degi!
     window.location.href = backendUrl;
