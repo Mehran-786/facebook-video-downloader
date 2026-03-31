@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 🌌 SPACE BACKGROUND - OFFLINE LOCAL IMAGE */
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #000; 
+    
+    /* Local Image */
+    background: 
+        linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)),
+        url('space-bg.jpg') 
+        no-repeat center center/cover;
+}
+
+/* CONTAINER */
+.content {
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    margin-top: -30px; 
+}
+
+/* FACEBOOK ICON */
+.fb-icon {
+    font-size: 50px;
+    color: #1877F2;
+    margin-bottom: 10px;
+}
+
+/* TITLE */
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* TAGLINE */
+.tagline {
+    margin-bottom: 25px;
+    color: #ccc;
+}
+
+/* ICONS */
+.platform-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.platform-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+}
+
+/* COLORS */
+.threads { background: black; color: white; border: 1px solid rgba(255,255,255,0.2); }
+.instagram { background: #E1306C; color: white; }
+.youtube { background: #FF0000; color: white; }
+
+/* ROTATE ON HOVER */
+.platform-btn:hover {
+    transform: rotate(360deg) scale(1.1);
+}
+
+/* GLASS INPUT */
+.input-group {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.url-input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    backdrop-filter: blur(10px);
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
+}
+
+.url-input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.download-btn {
+    padding: 15px 25px;
+    border: none;
+    background: rgba(255,255,255,0.8);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 0 5px 5px 0;
+    color: #000;
+    transition: background 0.3s;
+}
+
+.download-btn:hover {
+    background: white;
+}
+
+/* 🌟 TRANSPARENT FEATURE BOXES */
+.features-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    background: rgba(255, 255, 255, 0.05); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 30px 20px;
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.feature-box i {
+    font-size: 35px;
+    color: #8ab4f8; 
+    margin-bottom: 15px;
+}
+
+.feature-box h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.feature-box p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    .content { margin-top: 0; }
+    .platform-btn { width: 65px; height: 65px; font-size: 24px; }
+    .input-group { flex-direction: column; }
+    .url-input { border-radius: 5px 5px 0 0; }
+    .download-btn { border-radius: 0 0 5px 5px; }
+    .features-container { flex-direction: column; align-items: center; }
+    .feature-box { width: 100%; max-width: 300px; }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.6rem; }
+    .platform-btn { width: 55px; height: 55px; font-size: 20px; }
+}
