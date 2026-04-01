@@ -1,42 +1,54 @@
-// Download Button Logic
-document.getElementById('downloadBtn').addEventListener('click', () => {
-    const urlInput = document.getElementById('videoUrl');
-    const url = urlInput.value.trim();
-    const downloadBtn = document.getElementById('downloadBtn');
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+    const url = document.getElementById('videoUrl').value;
+    const resultDiv = document.getElementById('result');
+    const downloadButton = document.getElementById('downloadLink');
+    const imagePreview = document.getElementById('imagePreview'); // Naya image preview
 
     if (!url) {
-        alert('Please enter a valid Facebook video URL');
+        alert("Please paste a Facebook video link!");
         return;
     }
 
-    // Button ko update karna
-    downloadBtn.textContent = 'Starting Download...';
-    downloadBtn.disabled = true;
+    // Processing animation show karein
+    resultDiv.style.display = 'block';
+    downloadButton.style.display = 'none';
+    if(imagePreview) imagePreview.style.display = 'none';
+    resultDiv.innerHTML = '<p style="color: yellow;">Processing... Please wait ⏳</p>';
 
-    // 🌟 Direct Browser Download Trigger
-    // Hum seedha apne backend ko link bhej rahe hain GET request ke zariye
-    const backendUrl = `https://fbvideodownloader.onrender.com/api/download?url=${encodeURIComponent(url)}`;
-    
-    // Ye line naya tab nahi kholegi, balke aapke browser ka apna Download Manager start kar degi!
-    window.location.href = backendUrl;
+    try {
+        // Aapka live Render Backend URL
+        const backendUrl = `https://fbvideodownloader.onrender.com/api/download?url=${encodeURIComponent(url)}`;
+        
+        const response = await fetch(backendUrl);
+        const result = await response.json();
 
-    // 3 seconds baad button ko wapas normal kar dena
-    setTimeout(() => {
-        downloadBtn.textContent = 'Download';
-        downloadBtn.disabled = false;
-        urlInput.value = '';
-    }, 3000);
-});
-
-/* TOUCH ROTATION (For Mobile Devices) */
-document.querySelectorAll('.platform-btn').forEach(icon => {
-    icon.addEventListener('touchstart', () => {
-        icon.style.transform = "rotate(360deg) scale(1.1)";
-    });
-
-    icon.addEventListener('touchend', () => {
-        setTimeout(() => {
-            icon.style.transform = "rotate(0deg)";
-        }, 400);
-    });
+        if (result.success) {
+            resultDiv.innerHTML = '<p style="color: #00ff88;">Ready to Download! 🎉</p>';
+            downloadButton.style.display = 'inline-block';
+            
+            // Agar Video aayi hai
+            if (result.type === "video") {
+                if(imagePreview) imagePreview.style.display = "none";
+                downloadButton.innerText = "Download Video 🎬";
+                downloadButton.onclick = () => {
+                    window.open(result.link, '_blank');
+                };
+            } 
+            // Agar Photo aayi hai
+            else if (result.type === "image") {
+                if(imagePreview) {
+                    imagePreview.src = result.link;
+                    imagePreview.style.display = "block"; 
+                }
+                downloadButton.innerText = "Download Image 📸";
+                downloadButton.onclick = () => {
+                    window.open(result.link, '_blank');
+                };
+            }
+        } else {
+            resultDiv.innerHTML = `<p style="color: red;">Error: ${result.error}</p>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<p style="color: red;">Failed to connect to server!</p>`;
+    }
 });
