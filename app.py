@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 
@@ -7,37 +7,39 @@ CORS(app)
 
 @app.route('/api/download', methods=['GET'])
 def download_video():
-    video_url = request.args.get('url')
-    
-    if not video_url:
-        return jsonify({"error": "Link nahi mila! Please ek valid URL dalein."}), 400
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"error": "Link dena zaroori hai!"}), 400
 
-    # RapidAPI Endpoint aur Details
-    api_url = "https://facebook-media-downloader1.p.rapidapi.com/get_media"
-    payload = {"url": video_url}
-    
+    # Yahan Aapki Nayi API ka Link aur Headers aayenge
+    api_url = "YOUR_NEW_API_URL_HERE"
+    querystring = {"url": url}
     headers = {
-        "x-rapidapi-key": "2380a40defmsh5f5045b09c43624p1e4234jsnb9a4a71f37cd",
-        "x-rapidapi-host": "facebook-media-downloader1.p.rapidapi.com",
-        "Content-Type": "application/json"
+        "x-rapidapi-key": "YOUR_NEW_RAPIDAPI_KEY_HERE",
+        "x-rapidapi-host": "YOUR_NEW_RAPIDAPI_HOST_HERE"
     }
 
     try:
-        # API ko request bhejna
-        response = requests.post(api_url, json=payload, headers=headers)
+        response = requests.get(api_url, headers=headers, params=querystring)
         data = response.json()
-        
-        # JSON se exact MP4 file ka link nikalna
-        direct_link = data.get("direct_media_url")
 
-        if direct_link:
-            # Jaise hi link mile, user ko us direct video file par bhej do
-            return redirect(direct_link)
+        # NOTE: Nayi API ke hisab se "media_url" wala naam change karna par sakta hai
+        # Farz karein nayi API direct link ko 'url' ya 'link' kehti hai
+        media_link = data.get("direct_media_url") # Isay nayi API ke hisab se set karein
+        
+        if media_link:
+            # Check karein ke yeh Video hai ya Image
+            if ".mp4" in media_link.lower():
+                media_type = "video"
+            else:
+                media_type = "image"
+
+            return jsonify({"success": True, "type": media_type, "link": media_link})
         else:
-            return jsonify({"error": "Video nahi mili. Shayad post private hai ya link galat hai."}), 404
+            return jsonify({"error": "Media nahi mila. Link private ho sakta hai."}), 404
 
     except Exception as e:
-        return jsonify({"error": f"Server Error: {str(e)}"}), 500
+        return jsonify({"error": "Server mein koi masla aa gaya."}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
