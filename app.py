@@ -11,7 +11,7 @@ def download_video():
     # Frontend se aane wala user ka link
     video_url = request.args.get('url')
     if not video_url:
-        return jsonify({"error": "Link dena zaroori hai!"}), 400
+        return jsonify({"error": "insert a video link!"}), 400
 
     # Aapki bheji hui Nayi API ki Details
     api_url = "https://free-facebook-downloader.p.rapidapi.com/external-api/facebook-video-downloader"
@@ -49,9 +49,9 @@ def download_video():
                 media_type = "video" if ".mp4" in media_link.lower() else "image"
                 return jsonify({"success": True, "type": media_type, "link": media_link})
             else:
-                return jsonify({"error": "Video ka asil link nahi mil saka."}), 404
+                return jsonify({"error": "video link not found."}), 404
         else:
-            return jsonify({"error": "Video nahi mili. Link galat ya private hai."}), 404
+            return jsonify({"error": "video not found."}), 404
 
     except Exception as e:
         return jsonify({"error": f"Server Error: {str(e)}"}), 500
