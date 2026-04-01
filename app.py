@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
+import yt_dlp
 
 app = Flask(__name__)
 # CORS allow karega taake Vercel wala frontend is Render wale backend se baat kar sake
@@ -11,50 +11,35 @@ def download_video():
     # Frontend se aane wala user ka link
     video_url = request.args.get('url')
     if not video_url:
-        return jsonify({"error": "insert a video link!"}), 400
+        return jsonify({"error": "Link dena zaroori hai!"}), 400
 
-    # Aapki bheji hui Nayi API ki Details
-    api_url = "https://free-facebook-downloader.p.rapidapi.com/external-api/facebook-video-downloader"
-    
-    # URL jo API ko check karna hai
-    querystring = {"url": video_url}
-    
-    # Nayi API ka zaroori payload
-    payload = {
-        "key1": "value",
-        "key2": "value"
-    }
-    
-    # Aapki API Key aur Headers
-    headers = {
-        "x-rapidapi-key": "2380a40defmsh5f5045b09c43624p1e4234jsnb9a4a71f37cd",
-        "x-rapidapi-host": "free-facebook-downloader.p.rapidapi.com",
-        "Content-Type": "application/json"
+    # yt-dlp ki Khufiya Settings (Engine Config)
+    ydl_opts = {
+        'format': 'best', # Sab se achi quality nikalna
+        'quiet': True,    # Server par faltu logs band rakhna
+        'no_warnings': True,
+        'noplaylist': True, # Agar playlist ho toh sirf 1 video uthana
     }
 
     try:
-        # API ko request bhejna (JSON payload ke sath)
-        response = requests.post(api_url, json=payload, headers=headers, params=querystring)
-        data = response.json()
-
-        # Naye JSON format ke mutabiq link nikalna
-        if data.get("success") == True and "links" in data:
-            links = data["links"]
+        # Engine ko start karna
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # JADOO YAHAN HAI: download=False ka matlab hai file save mat karo, sirf direct link chura kar lao!
+            info = ydl.extract_info(video_url, download=False)
             
-            # Pehle High Quality dhoondo, na mile toh Low Quality le lo
-            media_link = links.get("Download High Quality") or links.get("Download Low Quality")
+            # Asal direct mp4 ya media link
+            media_link = info.get('url')
             
             if media_link:
-                # Check karna ke Video hai ya Photo (Image)
+                # Check karna ke Video hai ya Photo (Images ke liye bhi kuch hadd tak kaam karega)
                 media_type = "video" if ".mp4" in media_link.lower() else "image"
                 return jsonify({"success": True, "type": media_type, "link": media_link})
             else:
-                return jsonify({"error": "video link not found."}), 404
-        else:
-            return jsonify({"error": "video not found."}), 404
+                return jsonify({"error": "Video ka asil link nahi mil saka."}), 404
 
     except Exception as e:
-        return jsonify({"error": f"Server Error: {str(e)}"}), 500
+        # Agar Facebook ne block kiya ya video private hui
+        return jsonify({"error": "Video private hai ya link galat hai."}), 500
 
 if __name__ == '__main__':
     # Local testing ke liye server run karna
