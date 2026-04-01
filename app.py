@@ -3,43 +3,59 @@ from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+# CORS allow karega taake Vercel wala frontend is Render wale backend se baat kar sake
 CORS(app)
 
 @app.route('/api/download', methods=['GET'])
 def download_video():
-    url = request.args.get('url')
-    if not url:
+    # Frontend se aane wala user ka link
+    video_url = request.args.get('url')
+    if not video_url:
         return jsonify({"error": "Link dena zaroori hai!"}), 400
 
-    # Yahan Aapki Nayi API ka Link aur Headers aayenge
-    api_url = "YOUR_NEW_API_URL_HERE"
-    querystring = {"url": url}
+    # Aapki bheji hui Nayi API ki Details
+    api_url = "https://free-facebook-downloader.p.rapidapi.com/external-api/facebook-video-downloader"
+    
+    # URL jo API ko check karna hai
+    querystring = {"url": video_url}
+    
+    # Nayi API ka zaroori payload
+    payload = {
+        "key1": "value",
+        "key2": "value"
+    }
+    
+    # Aapki API Key aur Headers
     headers = {
-        "x-rapidapi-key": "YOUR_NEW_RAPIDAPI_KEY_HERE",
-        "x-rapidapi-host": "YOUR_NEW_RAPIDAPI_HOST_HERE"
+        "x-rapidapi-key": "2380a40defmsh5f5045b09c43624p1e4234jsnb9a4a71f37cd",
+        "x-rapidapi-host": "free-facebook-downloader.p.rapidapi.com",
+        "Content-Type": "application/json"
     }
 
     try:
-        response = requests.get(api_url, headers=headers, params=querystring)
+        # API ko request bhejna (JSON payload ke sath)
+        response = requests.post(api_url, json=payload, headers=headers, params=querystring)
         data = response.json()
 
-        # NOTE: Nayi API ke hisab se "media_url" wala naam change karna par sakta hai
-        # Farz karein nayi API direct link ko 'url' ya 'link' kehti hai
-        media_link = data.get("direct_media_url") # Isay nayi API ke hisab se set karein
-        
-        if media_link:
-            # Check karein ke yeh Video hai ya Image
-            if ".mp4" in media_link.lower():
-                media_type = "video"
+        # Naye JSON format ke mutabiq link nikalna
+        if data.get("success") == True and "links" in data:
+            links = data["links"]
+            
+            # Pehle High Quality dhoondo, na mile toh Low Quality le lo
+            media_link = links.get("Download High Quality") or links.get("Download Low Quality")
+            
+            if media_link:
+                # Check karna ke Video hai ya Photo (Image)
+                media_type = "video" if ".mp4" in media_link.lower() else "image"
+                return jsonify({"success": True, "type": media_type, "link": media_link})
             else:
-                media_type = "image"
-
-            return jsonify({"success": True, "type": media_type, "link": media_link})
+                return jsonify({"error": "Video ka asil link nahi mil saka."}), 404
         else:
-            return jsonify({"error": "Media nahi mila. Link private ho sakta hai."}), 404
+            return jsonify({"error": "Video nahi mili. Link galat ya private hai."}), 404
 
     except Exception as e:
-        return jsonify({"error": "Server mein koi masla aa gaya."}), 500
+        return jsonify({"error": f"Server Error: {str(e)}"}), 500
 
 if __name__ == '__main__':
+    # Local testing ke liye server run karna
     app.run(debug=True)
