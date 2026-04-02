@@ -75,15 +75,37 @@
         <button class="download-btn" id="downloadBtn" data-key="processBtn">Download</button>
     </div>
 
-    <div class="result-display-area">
-        <img id="imagePreview" src="" alt="Photo" class="image-preview">
+    <div id="resultCard" class="result-card" style="display: none;">
         
-        <div id="result" class="status-result"></div>
-        
-        <a href="#" target="_blank" id="finalDownloadLink" class="download-btn final-link" style="display: none;">Download Ready 🎬</a>
-    </div>
+        <div class="result-info">
+            <div class="preview-container">
+                <video id="videoPreview" controls style="display:none;" preload="metadata"></video>
+                <img id="imagePreview" src="" style="display:none;">
+            </div>
+            
+            <div class="details-container">
+                <h3 id="mediaTitle">Ready to Download!</h3>
+                <p id="mediaFormat">Format: MP4 (Video) / MP3 (Audio)</p>
+                <p style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i> Aap is video ko yahan play kar sakte hain. Niche diye gaye buttons se download karein.
+                </p>
+            </div>
+        </div>
 
-    <div class="features-container">
+        <div class="result-buttons">
+            <a href="#" target="_blank" id="btnDownloadVideo" class="action-btn video-btn">
+                <i class="fas fa-video"></i> Download Video
+            </a>
+            <a href="#" target="_blank" id="btnDownloadAudio" class="action-btn audio-btn">
+                <i class="fas fa-music"></i> Download Audio
+            </a>
+        </div>
+        
+    </div>
+    
+    <div id="statusMessage" class="status-result"></div>
+
+    <div class="features-container" style="margin-top: 40px;">
         <div class="feature-box">
             <i class="fas fa-bolt"></i>
             <h3 data-key="f1Title">Fast Download</h3>
