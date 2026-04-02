@@ -52,3 +52,28 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
         resultDiv.innerHTML = `<p style="color: red;">Failed to connect to server!</p>`;
     }
 });
+// =========================================
+// 🌟 NAYA SIDEBAR MENU KA LOGIC 🌟
+// =========================================
+
+const menuIcon = document.getElementById('menuIcon');
+const sidebar = document.getElementById('sidebar');
+const closeBtn = document.getElementById('closeBtn');
+const langToggle = document.getElementById('langToggle');
+const langMenu = document.getElementById('langMenu');
+
+// 3-Line Icon dabane par Menu kholo
+menuIcon.addEventListener('click', () => {
+    sidebar.classList.add('active');
+});
+
+// X Icon dabane par Menu band karo
+closeBtn.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+});
+
+// Language dabane par uski list kholo/band karo
+langToggle.addEventListener('click', (e) => {
+    e.preventDefault(); // Page refresh hone se rokne ke liye
+    langMenu.classList.toggle('active');
+});
