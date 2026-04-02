@@ -3,44 +3,63 @@ from flask_cors import CORS
 import yt_dlp
 
 app = Flask(__name__)
-# CORS allow karega taake Vercel wala frontend is Render wale backend se baat kar sake
-CORS(app)
+# CORS allow karta hai ke aapki Vercel website Render se baat kar sake
+CORS(app) 
 
 @app.route('/api/download', methods=['GET'])
 def download_video():
-    # Frontend se aane wala user ka link
-    video_url = request.args.get('url')
-    if not video_url:
-        return jsonify({"error": "Link dena zaroori hai!"}), 400
+    url = request.args.get('url')
+    
+    if not url:
+        return jsonify({"success": False, "error": "Bhai, URL dena zaroori hai!"}), 400
 
-    # yt-dlp ki Khufiya Settings (Engine Config)
+    # yt-dlp ki Khufiya Settings + Fake Browser Identity
     ydl_opts = {
-        'format': 'best', # Sab se achi quality nikalna
-        'quiet': True,    # Server par faltu logs band rakhna
+        'format': 'b[ext=mp4]/best', # Pehle se mix hui video lao
+        'quiet': True,
         'no_warnings': True,
-        'noplaylist': True, # Agar playlist ho toh sirf 1 video uthana
+        'noplaylist': True, # Agar 4 tasweerein hain toh sirf pehli lao
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-us,en;q=0.5',
+            'Sec-Fetch-Mode': 'navigate'
+        }
     }
 
     try:
-        # Engine ko start karna
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # JADOO YAHAN HAI: download=False ka matlab hai file save mat karo, sirf direct link chura kar lao!
-            info = ydl.extract_info(video_url, download=False)
+            # Video ki sari information nikalna bina download kiye
+            info = ydl.extract_info(url, download=False)
             
-            # Asal direct mp4 ya media link
-            media_link = info.get('url')
+            # Check karna ke tasveer hai ya video
+            media_type = "image" if info.get('_type') == 'url_transparent' and not info.get('formats') else "video"
             
-            if media_link:
-                # Check karna ke Video hai ya Photo (Images ke liye bhi kuch hadd tak kaam karega)
-                media_type = "video" if ".mp4" in media_link.lower() else "image"
-                return jsonify({"success": True, "type": media_type, "link": media_link})
-            else:
-                return jsonify({"error": "Video ka asil link nahi mil saka."}), 404
+            # 1. Asal Video Link
+            video_url = info.get('url')
+            
+            # 2. Asal Audio Link Nikalne ki Logic
+            audio_url = None
+            formats = info.get('formats', [])
+            for f in formats:
+                # Aisa format dhoondo jisme video na ho (vcodec='none') aur sirf audio ho (acodec!='none')
+                if f.get('vcodec') == 'none' and f.get('acodec') != 'none':
+                    audio_url = f.get('url')
+            
+            # Agar kisi wajah se sirf audio nahi milti, toh video wale link ko hi audio bana do
+            if not audio_url:
+                audio_url = video_url
+
+            return jsonify({
+                "success": True,
+                "type": media_type,
+                "link": video_url,
+                "audio_url": audio_url
+            })
 
     except Exception as e:
-        # Agar Facebook ne block kiya ya video private hui
-        return jsonify({"error": "Video private hai ya link galat hai."}), 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Local testing ke liye server run karna
-    app.run(debug=True)
+    # Render ke liye host 0.0.0.0 zaroori hai
+    app.run(host='0.0.0.0', port=5000)
