@@ -19,7 +19,6 @@ const translations = {
         "f2Desc": "No login, no tracking — your privacy matters",
         "f3Title": "All-in-One HD",
         "f3Desc": "Supports multiple platforms in highest available quality",
-        // Naye Messages
         "readyTitle": "Ready to Download!",
         "infoText": "You can play the video here. Use the buttons below to download.",
         "dlVideoBtn": "Download Video",
@@ -44,7 +43,6 @@ const translations = {
         "f2Desc": "کوئی لاگ ان نہیں، کوئی ٹریکنگ نہیں",
         "f3Title": "آل ان ون ایچ ڈی",
         "f3Desc": "بہترین کوالٹی میں تمام پلیٹ فارمز کی سپورٹ",
-        // Naye Messages
         "readyTitle": "ڈاؤنلوڈ کے لیے تیار!",
         "infoText": "آپ اس ویڈیو کو یہاں پلے کر سکتے ہیں۔ ڈاؤنلوڈ کے لیے نیچے دیے گئے بٹن استعمال کریں۔",
         "dlVideoBtn": "ویڈیو ڈاؤنلوڈ کریں",
@@ -114,7 +112,7 @@ const translations = {
 };
 
 function changeLanguage(lang) {
-    currentLang = lang; // Update current language variable
+    currentLang = lang; 
     
     const keys = document.querySelectorAll("[data-key]");
     keys.forEach(element => {
@@ -163,17 +161,18 @@ const imagePreview = document.getElementById('imagePreview');
 const btnDownloadVideo = document.getElementById('btnDownloadVideo');
 const btnDownloadAudio = document.getElementById('btnDownloadAudio');
 
+// 🌟 Render ka Base URL yahan likha gaya hai taake bar bar use ho sakay 🌟
+const RENDER_BASE_URL = "https://fbvideodownloader.onrender.com";
+
 downloadBtn.addEventListener('click', async () => {
     const url = videoUrlInput.value.trim();
     
     if (!url) {
-        // 🌟 Translated Alert 🌟
         alert(translations[currentLang].emptyLinkAlert);
         return;
     }
 
     const originalText = downloadBtn.innerHTML;
-    // 🌟 Translated Processing Text 🌟
     downloadBtn.innerHTML = translations[currentLang].processing + " <i class='fas fa-spinner fa-spin'></i>";
     downloadBtn.disabled = true;
     
@@ -183,7 +182,7 @@ downloadBtn.addEventListener('click', async () => {
     videoPreview.removeAttribute('src'); 
 
     try {
-        const backendUrl = `https://fbvideodownloader.onrender.com/api/download?url=${encodeURIComponent(url)}`;
+        const backendUrl = `${RENDER_BASE_URL}/api/download?url=${encodeURIComponent(url)}`;
         
         const response = await fetch(backendUrl);
         const data = await response.json();
@@ -198,34 +197,38 @@ downloadBtn.addEventListener('click', async () => {
             } else {
                 imagePreview.style.display = "none";
                 videoPreview.style.display = "block";
-                videoPreview.src = data.link;
+                videoPreview.src = data.link; // Player will stream directly from source
             }
 
-            btnDownloadVideo.href = data.link;
+            // 🌟 DIRECT DOWNLOAD LOGIC 🌟
+            btnDownloadVideo.removeAttribute("target");
+            btnDownloadAudio.removeAttribute("target");
+
+            const directVideoUrl = `${RENDER_BASE_URL}/api/direct?url=${encodeURIComponent(data.link)}&type=mp4`;
+            btnDownloadVideo.href = directVideoUrl;
 
             if(data.audio_url) {
-                btnDownloadAudio.href = data.audio_url;
+                const directAudioUrl = `${RENDER_BASE_URL}/api/direct?url=${encodeURIComponent(data.audio_url)}&type=mp3`;
+                btnDownloadAudio.href = directAudioUrl;
                 btnDownloadAudio.style.display = "flex";
             } else if(data.type === "image") {
                 btnDownloadAudio.style.display = "none";
             } else {
-                btnDownloadAudio.href = data.link;
+                const directAudioFallback = `${RENDER_BASE_URL}/api/direct?url=${encodeURIComponent(data.link)}&type=mp3`;
+                btnDownloadAudio.href = directAudioFallback;
                 btnDownloadAudio.style.display = "flex";
             }
 
-            // 🌟 Translated Success Message 🌟
             statusMessage.style.display = "block";
             statusMessage.style.color = "#4ade80"; 
             statusMessage.innerHTML = translations[currentLang].successMsg;
 
         } else {
-            // 🌟 Translated Error Message 🌟
             statusMessage.style.display = "block";
             statusMessage.style.color = "#ff4757"; 
             statusMessage.innerHTML = "❌ " + (data.error || translations[currentLang].errorNotFound);
         }
     } catch (error) {
-        // 🌟 Translated Server Error Message 🌟
         statusMessage.style.display = "block";
         statusMessage.style.color = "#ff4757";
         statusMessage.innerHTML = "❌ " + translations[currentLang].errorServer;
