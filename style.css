@@ -8,11 +8,12 @@
 body {
     background-color: #050508; 
     
+    /* 🌟 WEBP BACKGROUND IMAGE 🌟 */
     background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+        linear-gradient(rgba(8, 8, 15, 0.92), rgba(8, 8, 15, 0.92)), 
         radial-gradient(at 0% 0%, rgba(24, 119, 242, 0.12) 0px, transparent 50%), 
         radial-gradient(at 100% 100%, rgba(214, 36, 159, 0.12) 0px, transparent 50%), 
-        url('space-bg.jpg'); 
+        url('space-bg.webp'); 
     
     background-size: cover;
     background-position: center;
@@ -132,9 +133,7 @@ h1 {
     transform: scale(0.98);
 }
 
-/* ========================================= */
-/* 🌟 RESULT CARD KA DESIGN 🌟 */
-/* ========================================= */
+/* RESULT CARD KA DESIGN */
 .result-card {
     background: rgba(15, 15, 26, 0.8);
     border: 1px solid rgba(255,255,255,0.1);
@@ -287,6 +286,7 @@ h1 {
 .feature-box p {
     font-size: 14px;
     color: #cbd5e1;
+    line-height: 1.6;
 }
 
 /* Sidebar Menu */
