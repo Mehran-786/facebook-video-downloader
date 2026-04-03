@@ -1,9 +1,5 @@
-// Global variable to track current language for JS Alerts
 let currentLang = 'en';
 
-// =========================================
-// 🌟 MULTI-LANGUAGE DICTIONARY 🌟
-// =========================================
 const translations = {
     "en": {
         "contactBtn": '<i class="fas fa-envelope"></i> Contact Me',
@@ -18,7 +14,6 @@ const translations = {
         "f2Title": "Safe & Secure",
         "f2Desc": "No login, no tracking — your privacy matters",
         "f3Title": "All-in-One HD",
-        // 🌟 Naya Text Yahan Update Hua 🌟
         "f3Desc": "FaceBook video downloader<br>Instagram Video downloader<br>Thread Video downloader",
         "readyTitle": "Ready to Download!",
         "infoText": "You can play the video here. Use the buttons below to download.",
@@ -69,7 +64,7 @@ const translations = {
         "f3Title": "ऑल-इन-वन HD",
         "f3Desc": "फेसबुक वीडियो डाउनलोडर<br>इंस्टाग्राम वीडियो डाउनलोडर<br>थ्रेड्स वीडियो डाउनलोडर",
         "readyTitle": "डाउनलोड के लिए तैयार!",
-        "infoText": "आप यहां वीडियो चला सकते हैं। डाउनलोड करने के लिए नीचे दिए गए बटन का उपयोग करें。",
+        "infoText": "आप यहां वीडियो चला सकते हैं। डाउनलोड करने के लिए नीचे दिए गए बटन का उपयोग करें।",
         "dlVideoBtn": "वीडियो डाउनलोड करें",
         "dlAudioBtn": "ऑडियो डाउनलोड करें",
         "emptyLinkAlert": "कृपया पहले लिंक पेस्ट करें!",
@@ -157,7 +152,7 @@ closeBtn.addEventListener('click', () => { sidebar.classList.remove('active'); }
 langToggle.addEventListener('click', (e) => { e.preventDefault(); langMenu.classList.toggle('active'); });
 
 // =========================================
-// 🌟 MAIN DOWNLOADING & PLAYER LOGIC 🌟
+// 🌟 MAIN LOGIC (WITH DIRECT DOWNLOAD) 🌟
 // =========================================
 const downloadBtn = document.getElementById('downloadBtn');
 const videoUrlInput = document.getElementById('videoUrl');
@@ -169,6 +164,7 @@ const imagePreview = document.getElementById('imagePreview');
 const btnDownloadVideo = document.getElementById('btnDownloadVideo');
 const btnDownloadAudio = document.getElementById('btnDownloadAudio');
 
+// 🌟 APKA MAIN BACKEND URL 🌟
 const RENDER_BASE_URL = "https://fbvideodownloader.onrender.com";
 
 downloadBtn.addEventListener('click', async () => {
