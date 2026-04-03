@@ -164,7 +164,6 @@ const imagePreview = document.getElementById('imagePreview');
 const btnDownloadVideo = document.getElementById('btnDownloadVideo');
 const btnDownloadAudio = document.getElementById('btnDownloadAudio');
 
-// 🌟 APKA MAIN BACKEND URL 🌟
 const RENDER_BASE_URL = "https://fbvideodownloader.onrender.com";
 
 downloadBtn.addEventListener('click', async () => {
