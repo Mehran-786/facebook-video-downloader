@@ -6,7 +6,9 @@ import requests
 app = Flask(__name__)
 CORS(app) 
 
-# --- Purana Link Nikaalne Wala Route ---
+# ==========================================
+# 🌟 ROUTE 1: LINK NIKALNE KE LIYE 🌟
+# ==========================================
 @app.route('/api/download', methods=['GET'])
 def download_video():
     url = request.args.get('url')
@@ -54,7 +56,7 @@ def download_video():
 
 
 # ==========================================
-# 🌟 NAYA ROUTE: DIRECT DOWNLOAD WITH RESUME SUPPORT 🌟
+# 🌟 ROUTE 2: DIRECT DOWNLOAD FORCE KARNE KE LIYE 🌟
 # ==========================================
 @app.route('/api/direct', methods=['GET'])
 def direct_download():
@@ -65,34 +67,29 @@ def direct_download():
         return "URL is missing", 400
         
     try:
-        # Browser ki taraf se aane wali 'Range' header ko pakarna
         range_header = request.headers.get('Range', None)
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0'}
         
-        # Agar browser Resume karne ki koshish kar raha hai toh header aage pass karo
         if range_header:
             headers['Range'] = range_header
 
         req = requests.get(file_url, stream=True, headers=headers)
         
-        # Response headers set karna
         resp_headers = {
             'Content-Disposition': f'attachment; filename="FVD_Media.{file_type}"',
-            'Accept-Ranges': 'bytes' # Browser ko batana ke pause/resume support hai
+            'Accept-Ranges': 'bytes'
         }
 
-        # Agar Content-Length mili hai (file size), toh wo bhi pass kar do
         if 'Content-Length' in req.headers:
             resp_headers['Content-Length'] = req.headers['Content-Length']
             
-        # Agar Content-Range mili hai (resume ke waqt), toh pass karo
         if 'Content-Range' in req.headers:
             resp_headers['Content-Range'] = req.headers['Content-Range']
 
         status_code = req.status_code
 
         return Response(
-            stream_with_context(req.iter_content(chunk_size=1024 * 1024)), # 1MB chunks
+            stream_with_context(req.iter_content(chunk_size=1024 * 1024)), 
             status=status_code,
             content_type=req.headers.get('content-type', f'video/{file_type}'),
             headers=resp_headers
