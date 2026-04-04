@@ -10,7 +10,7 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehran Rasool">
 
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/webp" href="icon.webp">
 
     <meta property="og:title" content="All-in-One HD Video Downloader">
     <meta property="og:description" content="Quickly download your favorite videos from FB, Insta, and Threads. 100% Free and Safe!">
@@ -43,25 +43,18 @@
 </head>
 <body>
 
-<div class="menu-icon" id="menuIcon">
-    <i class="fas fa-bars"></i>
-</div>
+<nav class="top-nav desktop-nav">
+    <a href="#" class="nav-brand">
+        <img src="icon.webp" alt="Logo">
+        <span>media<span class="domain-ext">.net</span></span>
+    </a>
 
-<div class="sidebar" id="sidebar">
-    <div class="close-btn" id="closeBtn">
-        <i class="fas fa-times"></i>
-    </div>
-    <ul class="menu-links">
-        <li>
-            <a href="mailto:mehranrasool.sp24@gmail.com?subject=Inquiry about Video Downloader" data-key="contactBtn">
-                <i class="fas fa-envelope"></i> Contact Me
-            </a>
-        </li>
+    <ul class="nav-links">
         <li class="dropdown">
-            <a href="#" id="langToggle">
-                <i class="fas fa-globe"></i> <span data-key="langBtn">Language</span> <i class="fas fa-caret-down" style="margin-left: auto;"></i>
+            <a href="#" id="desktopLangToggle">
+                <i class="fas fa-globe"></i> <span data-key="langBtn">Language</span> <i class="fas fa-caret-down"></i>
             </a>
-            <ul class="dropdown-menu" id="langMenu">
+            <ul class="dropdown-menu" id="desktopLangMenu">
                 <li><a href="#" onclick="changeLanguage('en')">English</a></li>
                 <li><a href="#" onclick="changeLanguage('ur')">Urdu (اردو)</a></li>
                 <li><a href="#" onclick="changeLanguage('hi')">Hindi (हिन्दी)</a></li>
@@ -76,8 +69,57 @@
             </ul>
         </li>
         <li>
-            <a href="#" id="extensionLink" data-key="extBtn">
-                <i class="fas fa-puzzle-piece"></i> Extension <span style="font-size: 10px; background: red; padding: 2px 5px; border-radius: 5px; margin-left: 10px;">Soon</span>
+            <a href="#">
+                <i class="fas fa-puzzle-piece"></i> 
+                <span>Extension</span> 
+                <span class="soon-badge">Soon</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div class="mobile-top-bar mobile-nav">
+    <div class="menu-icon" id="menuIcon">
+        <i class="fas fa-bars"></i>
+    </div>
+    <a href="#" class="nav-brand">
+        <img src="icon.webp" alt="Logo">
+        <span>media<span class="domain-ext">.net</span></span>
+    </a>
+</div>
+
+<div class="sidebar mobile-nav" id="sidebar">
+    <div class="close-btn" id="closeBtn">
+        <i class="fas fa-times"></i>
+    </div>
+    
+    <ul class="menu-links" style="margin-top: 60px;">
+        <li>
+            <a href="mailto:mehranrasool.sp24@gmail.com?subject=Inquiry about Video Downloader" data-key="contactBtn">
+                <i class="fas fa-envelope"></i> Contact Me
+            </a>
+        </li>
+        <li class="dropdown">
+            <a href="#" id="mobileLangToggle">
+                <i class="fas fa-globe"></i> <span data-key="langBtn">Language</span> <i class="fas fa-caret-down" style="margin-left: auto;"></i>
+            </a>
+            <ul class="dropdown-menu-mobile" id="mobileLangMenu">
+                <li><a href="#" onclick="changeLanguage('en')">English</a></li>
+                <li><a href="#" onclick="changeLanguage('ur')">Urdu (اردو)</a></li>
+                <li><a href="#" onclick="changeLanguage('hi')">Hindi (हिन्दी)</a></li>
+                <li><a href="#" onclick="changeLanguage('ar')">Arabic (العربية)</a></li>
+                <li><a href="#" onclick="changeLanguage('fa')">Farsi (فارسی)</a></li>
+                <li><a href="#" onclick="changeLanguage('zh')">Chinese (中文)</a></li>
+                <li><a href="#" onclick="changeLanguage('ja')">Japanese (日本語)</a></li>
+                <li><a href="#" onclick="changeLanguage('ko')">Korean (한국어)</a></li>
+                <li><a href="#" onclick="changeLanguage('de')">German (Deutsch)</a></li>
+                <li><a href="#" onclick="changeLanguage('it')">Italian (Italiano)</a></li>
+                <li><a href="#" onclick="changeLanguage('ms')">Malay (Melayu)</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" data-key="extBtn">
+                <i class="fas fa-puzzle-piece"></i> Extension <span class="soon-badge" style="margin-left: 10px;">Soon</span>
             </a>
         </li>
     </ul>
@@ -138,7 +180,7 @@
     
     <div id="statusMessage" class="status-result"></div>
 
-    <div class="features-container" style="margin-top: 40px;">
+    <div class="features-container" style="margin-top: 25px;">
         <div class="feature-box">
             <i class="fas fa-bolt"></i>
             <h3 data-key="f1Title">Fast Download</h3>
@@ -154,7 +196,7 @@
         <div class="feature-box">
             <i class="fas fa-star"></i>
             <h3 data-key="f3Title">All-in-One HD</h3>
-            <p data-key="f3Desc" style="line-height: 1.8;">
+            <p data-key="f3Desc" style="line-height: 1.6;">
                 FaceBook video downloader<br>
                 Instagram Video downloader<br>
                 Thread Video downloader
