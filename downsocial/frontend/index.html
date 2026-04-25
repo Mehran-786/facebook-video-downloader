@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Video Downloader HD - FB, Insta & Threads</title>
+    <meta name="description" content="Fast, safe, and all-in-one HD video downloader for Facebook, Instagram & Threads. Download HD videos securely with no login or tracking instantly. Free, reliable, and easy to use.">
+    <link rel="icon" type="image/webp" href="icon.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="top-nav desktop-nav">
+    <a href="https://downsocial.net" class="nav-brand"><img src="icon.webp" alt="Facebook Video Downloader Logo"><span>downsocial<span class="domain-ext">.net</span></span></a>
+    
+    <ul class="nav-links">
+        <li class="dropdown notification-wrapper">
+            <a href="#" id="desktopNotifToggle" class="bell-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notif-dot"></span> 
+            </a>
+            
+            <div class="notification-panel" id="desktopNotifPanel">
+                <div class="notif-header">
+                    <h4>Notifications</h4>
+                    <span class="badge">1 New</span>
+                </div>
+                <div class="notif-body">
+                    <div class="notif-item expandable-notif">
+                        <div class="notif-title-row">
+                            <div class="notif-icon"><i class="fas fa-puzzle-piece"></i></div>
+                            <div class="notif-info">
+                                <h5>Browser Extension Coming Soon! 🚀</h5>
+                                <p class="notif-time">Just now</p>
+                            </div>
+                            <i class="fas fa-chevron-down notif-chevron"></i>
+                        </div>
+                        <div class="notif-content">
+                            <p>We are thrilled to announce that our official <strong>downsocial.net Browser Extension</strong> is currently in development!</p>
+                            <p><strong>Why do you need it?</strong><br>
+                                ✔ Download videos directly from Facebook, Instagram, and Threads without copying and pasting links.<br>
+                                ✔ A dedicated download button will appear below every video on your feed.<br>
+                                ✔ 1-Click HD downloads right from your browser.</p>
+                            <p>Stay tuned! It will be available for Chrome, Edge, and Firefox very soon.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li><a href="#"><i class="fas fa-puzzle-piece"></i> <span data-key="extBtn">Extension</span> <span class="soon-badge" data-key="soonBadge">Soon</span></a></li>
+
+        <li class="dropdown">
+            <a href="#" id="desktopLangToggle"><i class="fas fa-globe"></i> <span data-key="langBtn">Language</span> <i class="fas fa-caret-down"></i></a>
+            <ul class="dropdown-menu" id="desktopLangMenu">
+                <li><a href="#" onclick="changeLanguage('en')">English</a></li>
+                <li><a href="#" onclick="changeLanguage('es')">Español (Spanish)</a></li>
+                <li><a href="#" onclick="changeLanguage('fr')">Français (French)</a></li>
+                <li><a href="#" onclick="changeLanguage('hi')">हिन्दी (Hindi)</a></li>
+                <li><a href="#" onclick="changeLanguage('ar')">العربية (Arabic)</a></li>
+                <li><a href="#" onclick="changeLanguage('pt')">Português (Portuguese)</a></li>
+                <li><a href="#" onclick="changeLanguage('bn')">বাংলা (Bengali)</a></li>
+                <li><a href="#" onclick="changeLanguage('ru')">Русский (Russian)</a></li>
+                <li><a href="#" onclick="changeLanguage('id')">Bahasa Indonesia</a></li>
+                <li><a href="#" onclick="changeLanguage('zh')">中文 (Chinese)</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<div class="mobile-top-bar mobile-nav">
+    <div class="menu-icon" id="menuIcon"><i class="fas fa-bars"></i></div>
+    <a href="https://downsocial.net" class="nav-brand"><img src="icon.webp" alt="Facebook Downloader Logo"><span>downsocial<span class="domain-ext">.net</span></span></a>
+    
+    <div class="mobile-bell notification-wrapper">
+        <a href="#" id="mobileNotifToggle" class="bell-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notif-dot"></span>
+        </a>
+        
+        <div class="notification-panel" id="mobileNotifPanel">
+            <div class="notif-header">
+                <h4>Notifications</h4>
+                <span class="badge">1 New</span>
+            </div>
+            <div class="notif-body">
+                <div class="notif-item expandable-notif">
+                    <div class="notif-title-row">
+                        <div class="notif-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="notif-info">
+                            <h5>Browser Extension Coming Soon! 🚀</h5>
+                            <p class="notif-time">Just now</p>
+                        </div>
+                        <i class="fas fa-chevron-down notif-chevron"></i>
+                    </div>
+                    <div class="notif-content">
+                        <p>We are thrilled to announce that our official <strong>downsocial.net Browser Extension</strong> is currently in development!</p>
+                        <p><strong>Why do you need it?</strong><br>
+                            ✔ Download videos directly without copying links.<br>
+                            ✔ A download button will appear below every video.<br>
+                            ✔ 1-Click HD downloads right from your browser.</p>
+                        <p>Stay tuned! Coming to Chrome, Edge, and Firefox.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar mobile-nav" id="sidebar">
+    <div class="close-btn" id="closeBtn"><i class="fas fa-times"></i></div>
+    <ul class="menu-links" style="margin-top: 60px;">
+        <li><a href="index.html"><i class="fas fa-home"></i> <span data-key="homeBtn">Home</span></a></li>
+        
+        <li><a href="#"><i class="fas fa-puzzle-piece"></i> <span data-key="extBtn">Extension</span> <span class="soon-badge" data-key="soonBadge" style="margin-left: 10px;">Soon</span></a></li>
+
+        <li class="dropdown">
+            <a href="#" id="mobileLangToggle"><i class="fas fa-globe"></i> <span data-key="langBtn">Language</span> <i class="fas fa-caret-down" style="margin-left:auto;"></i></a>
+            <ul class="dropdown-menu-mobile" id="mobileLangMenu">
+                <li><a href="#" onclick="changeLanguage('en')">English</a></li>
+                <li><a href="#" onclick="changeLanguage('es')">Español (Spanish)</a></li>
+                <li><a href="#" onclick="changeLanguage('fr')">Français (French)</a></li>
+                <li><a href="#" onclick="changeLanguage('hi')">हिन्दी (Hindi)</a></li>
+                <li><a href="#" onclick="changeLanguage('ar')">العربية (Arabic)</a></li>
+                <li><a href="#" onclick="changeLanguage('pt')">Português (Portuguese)</a></li>
+                <li><a href="#" onclick="changeLanguage('bn')">বাংলা (Bengali)</a></li>
+                <li><a href="#" onclick="changeLanguage('ru')">Русский (Russian)</a></li>
+                <li><a href="#" onclick="changeLanguage('id')">Bahasa Indonesia</a></li>
+                <li><a href="#" onclick="changeLanguage('zh')">中文 (Chinese)</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="main-wrapper">
+    <h1 data-key="mainTitle">Facebook Video Downloader HD — Save Videos, Reels & Stories for Free</h1>
+    <p class="tagline" data-key="tagline">Download FB Videos, Reels & Stories for Free</p>
+
+    <div class="platform-buttons">
+        <div class="platform-btn threads"><i class="fa-brands fa-threads"></i></div>
+        <div class="platform-btn facebook"><i class="fab fa-facebook-f"></i></div>
+        <div class="platform-btn instagram"><i class="fab fa-instagram"></i></div>
+    </div>
+
+    <div class="input-group">
+        <input type="text" class="url-input" id="videoUrl" data-key="placeholder" placeholder="Paste your Facebook video link here...">
+        <button class="download-btn" id="downloadBtn" data-key="processBtn">Download Video</button>
+    </div>
+
+    <div id="resultCard" class="result-card" style="display: none;">
+        <div class="result-info">
+            <div class="preview-container">
+                <video id="videoPreview" controls style="display:none;" preload="metadata"></video>
+                <img id="imagePreview" src="" style="display:none;" alt="Video Preview">
+            </div>
+            <div class="details-container">
+                <h3 id="mediaTitle" data-key="readyTitle">Ready to Download!</h3>
+                <p style="font-size: 13px; color: #94a3b8; margin-top: 10px;"><i class="fas fa-info-circle"></i> <span data-key="infoText">Choose your preferred quality below.</span></p>
+            </div>
+        </div>
+
+        <div class="result-buttons">
+            <a href="#" id="btnVidHigh" class="action-btn video-btn"><i class="fas fa-video"></i> <span data-key="dlVidHigh">Video (HD)</span></a>
+            <a href="#" id="btnVidNorm" class="action-btn video-btn-outline"><i class="fas fa-download"></i> <span data-key="dlVidNorm">Video (Normal)</span></a>
+            <a href="#" id="btnAudHigh" class="action-btn audio-btn"><i class="fas fa-music"></i> <span data-key="dlAudHigh">Audio (HQ)</span></a>
+            <a href="#" id="btnAudNorm" class="action-btn audio-btn-outline"><i class="fas fa-headphones"></i> <span data-key="dlAudNorm">Audio (Normal)</span></a>
+        </div>
+    </div>
+    <div id="statusMessage" class="status-result"></div>
+
+    <div class="features-container" id="featuresContainer" style="margin-top: 20px;">
+        
+        <div class="feature-box expandable-box">
+            <i class="fas fa-bolt"></i>
+            <h3 data-key="f1Title">Fast Download</h3>
+            <p data-key="f1Desc">Nobody enjoys waiting. That’s why the entire tool is built around speed.</p>
+            <div class="more-details-btn"><span class="more-details-text" data-key="moreDetails">More Details</span> <i class="fas fa-chevron-down"></i></div>
+            <div class="blog-content">
+                <h4><i class="fas fa-shipping-fast" style="font-size: 18px; color: #4dabf7; margin-right: 5px;"></i> Fast Video Download</h4>
+                <p>Whether you’re after a short reel or a longer video, you’ll see download options ready in seconds.</p>
+                <p>The system processes your link instantly, with no buffering or sluggishness. Even hefty HD files won’t slow your device.</p>
+                <p>And it works the same across phones, tablets, and laptops — wherever you are.</p>
+            </div>
+        </div>
+        
+        <div class="feature-box expandable-box">
+            <i class="fas fa-shield-alt"></i>
+            <h3 data-key="f2Title">Safe & Secure</h3>
+            <p data-key="f2Desc">Your privacy isn’t something you should trade for convenience.</p>
+            <div class="more-details-btn"><span class="more-details-text" data-key="moreDetails">More Details</span> <i class="fas fa-chevron-down"></i></div>
+            <div class="blog-content">
+                <h4><i class="fas fa-lock" style="font-size: 18px; color: #4dabf7; margin-right: 5px;"></i> Safe & Secure Downloading</h4>
+                <p>That’s why the platform never asks for a login, your email, or any personal details.</p>
+                <p>There’s zero tracking and no stored download history. Just a private, clean download every time.</p>
+            </div>
+        </div>
+        
+        <div class="feature-box expandable-box">
+            <i class="fas fa-star"></i>
+            <h3 data-key="f3Title">All-in-One HD</h3>
+            <p data-key="f3ShortDesc">One tool handles Facebook, Instagram, and Threads videos.</p>
+            
+            <div class="more-details-btn"><span class="more-details-text" data-key="moreDetails">More Details</span> <i class="fas fa-chevron-down"></i></div>
+            <div class="blog-content">
+                <div style="background: rgba(24, 119, 242, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <p data-key="f3Desc" style="line-height: 1.6; font-weight: bold; color: #4dabf7; margin-bottom: 0;">FaceBook video downloader<br>Instagram Video downloader<br>Thread Video downloader</p>
+                </div>
+                
+                <h4><i class="fas fa-photo-video" style="font-size: 18px; color: #4dabf7; margin-right: 5px;"></i> All-in-One HD Video Downloader</h4>
+                <p>Paste any Facebook URL and download it in high quality — posts, reels, live recordings, everything.</p>
+                <p>Grab Instagram reels and videos just as easily, and Threads content is supported too.</p>
+                <p>Same process, same speed, same quality, all from a single page.</p>
+            </div>
+        </div>
+
+    </div>
+</div> 
+
+<div class="bottom-wrapper">
+    
+    <div class="how-to-section">
+        <h2 class="section-title">How to Use the Facebook Video Downloader</h2>
+        <div class="how-to-content">
+            <h3>Step 1: Copy the Facebook video link</h3>
+            <p>Open Facebook, find the video, tap Share, and select “Copy Link.”</p>
+            <ul class="how-to-list">
+                <li><i class="fas fa-check"></i> The URL is now on your clipboard.</li>
+            </ul>
+            
+            <h3>Step 2: Paste the link into the downloader</h3>
+            <p>Return to this page and paste the full URL into the input box.</p>
+            <ul class="how-to-list">
+                <li><i class="fas fa-check"></i> Make sure the link isn’t cut off — the tool detects it automatically.</li>
+            </ul>
+
+            <h3>Step 3: Click the Download button</h3>
+            <p>The system processes your video and soon displays the available quality options.</p>
+            <ul class="how-to-list">
+                <li><i class="fas fa-check"></i> For longer videos, give it a few extra seconds before choosing.</li>
+            </ul>
+
+            <h3>Step 4: Choose your video quality (HD or SD)</h3>
+            <p>Pick 1080p or 720p for HD, or SD for a smaller file size.</p>
+            <ul class="how-to-list">
+                <li><i class="fas fa-check"></i> You can select MP4 for video, or MP3 if you only need the audio track.</li>
+            </ul>
+
+            <div class="how-to-hidden-content" id="howToHiddenContent">
+                <h3>Step 5: Save the video to your device</h3>
+                <p>Tap your chosen download option and the file saves automatically.</p>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-check"></i> On mobile, check your Gallery or Downloads folder.</li>
+                    <li><i class="fas fa-check"></i> On desktop, look in your browser’s Downloads folder.</li>
+                </ul>
+                <p class="pro-tip">Tip: If you plan to edit the video later, grab the highest resolution MP4 available.</p>
+
+                <hr class="section-divider">
+
+                <h3>Safe & Secure Downloading</h3>
+                <p>No login is required for public videos. Your link is processed temporarily on secure servers and removed immediately afterward.</p>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-shield-alt"></i> Private or restricted videos may need extra steps to access.</li>
+                </ul>
+
+                <h3>Fast & Reliable Downloads</h3>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-bolt"></i> Processing time depends on file size, but most downloads are ready within seconds.</li>
+                    <li><i class="fas fa-bolt"></i> The tool works across all major browsers and devices, handling regular posts, reels, and stories.</li>
+                </ul>
+
+                <h3>Important Tips</h3>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-info-circle"></i> Double-check that your Facebook video link is complete before pasting.</li>
+                    <li><i class="fas fa-info-circle"></i> For private videos, make sure you can view them in your browser first.</li>
+                    <li><i class="fas fa-info-circle"></i> Live videos can only be downloaded after the broadcast has ended.</li>
+                </ul>
+
+                <h3>Why Use Our Facebook Video Downloader?</h3>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-star"></i> Download in HD, Full HD, or the best available quality.</li>
+                    <li><i class="fas fa-star"></i> No app installation needed — entirely browser-based.</li>
+                    <li><i class="fas fa-star"></i> Supports Facebook posts, reels, and stories.</li>
+                    <li><i class="fas fa-star"></i> Free, unlimited, and private.</li>
+                </ul>
+
+                <h3 style="margin-top: 20px;">Start Downloading Now</h3>
+                <ul class="how-to-list">
+                    <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> Only download videos you own or have permission to use.</li>
+                    <li><i class="fas fa-check-circle" style="color: #4ade80;"></i> No login required — your privacy stays fully protected.</li>
+                </ul>
+            </div>
+
+            <button class="read-more-btn" id="readMoreHowTo" data-key="readMoreBtn">Read More <i class="fas fa-chevron-down"></i></button>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2 class="section-title">FAQ Section</h2>
+        <div class="accordion">
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q1. Is it free and legal to download Facebook videos?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Our tool is 100% free and works in any browser. Copyright laws differ by country, so avoid using downloaded content for commercial purposes unless you have the creator’s permission.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q2. Do I need to install an app or software?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Not at all. It’s browser-based and runs on Chrome, Safari, Firefox, and others — on both desktop and mobile.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q3. How do I download Facebook videos on mobile?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Copy the video link (Share → Copy Link), paste it into the field, pick your preferred quality (MP4 or MP3), and tap Download. If the “Copy Link” option doesn’t appear, open the post in a new tab to get the URL.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q4. Can I download in Full HD (1080p or 4K)?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Absolutely. The downloader grabs the highest quality available from the original upload, which can be 1080p or even 4K. Larger files naturally take a bit longer.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q5. Can I download Facebook Reels, Stories, or Live videos?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Public reels and stories follow the same process. Live videos become downloadable only after the broadcast finishes and the post is made public.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q6. Can I download private Facebook videos?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Only if you can already view the video in your browser. Our tool doesn’t bypass Facebook’s privacy settings.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q7. Will the downloaded video have a watermark?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>We don’t add any watermarks. You get the original file as uploaded. If a creator added their own branding, it stays — but we leave the video untouched.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q8. Can I convert a Facebook video to MP3?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>Yes. Choose the MP3 option after the link is processed, and the audio track will be extracted, compatible with virtually any media player.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q9. Where do downloaded videos get saved?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>On mobile, they usually land in the Downloads folder or Photos/Gallery app. On desktop, they go to your browser’s default download location.</p>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Q10. Is my data safe? Why do some videos fail to download?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-body">
+                    <p>We never ask for login or collect personal data — only the URL is processed. If a download fails, check that the link is correct and the video isn’t private or deleted. Regional access restrictions can occasionally cause trouble.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="seo-article-wrapper">
+    <h2>Saving Facebook videos used to be complicated. Now it takes about ten seconds.</h2>
+    <p>Whether you want an educational clip, a funny friend-shared video, or a trending reel, this downloader lets you save it directly to your device in HD, with no watermarks and no sign-ups.</p>
+    <p>Speed is at the core. Most downloads are ready in moments, even for HD and Full HD files.</p>
+    <p>You can grab videos, reels, and stories in up to 4K where possible, and the process is just as smooth on your phone as on a laptop.</p>
+    <p>There’s no app to install, no account to create, and no limit on how many you can download.</p>
+    
+    <h3>Why People Download Facebook Videos</h3>
+    <p>There are plenty of reasons to save a video.</p>
+    <p>Maybe you want to watch a tutorial later without using mobile data. Or you’ve stumbled upon a recipe that’s easier to follow from your gallery.</p>
+    <p>Some users archive their own memories from Facebook — travel clips, family moments, or creative projects.</p>
+    <p>For educators, saving short explainer videos makes it easy to share with students offline.</p>
+    <p>And let’s be honest: sometimes you just want to keep a hilarious video before it vanishes from your feed.</p>
+    
+    <h3>Supported Video Types: From 360p to 4K</h3>
+    <p>Our downloader handles all common Facebook formats. Download regular feed videos, Facebook Reels, Stories, and even live recordings after the stream ends.</p>
+    <p>Quality options automatically show what the original supports — select 1080p for crisp Full HD, 720p as a balanced choice, or lower resolutions if you need a smaller file.</p>
+    <p>When the source was uploaded in 2K or 4K, those higher resolutions appear automatically.</p>
+    <p>And if you only need the sound, just pick the MP3 / audio track.</p>
+    
+    <h3>Common Download Issues & Simple Solutions</h3>
+    <p>Occasionally a download doesn’t start right away. The most common fix is checking the link: is it complete and from a public post?</p>
+    <p>If the video is private, you’ll need to be logged into Facebook and able to view it in your browser first.</p>
+    <p>Regional restrictions or deleted videos cause problems too. If all seems correct but it still fails, wait a moment and try again — temporary network hiccups happen.</p>
+    <p>The good news: the tool doesn’t store or cache anything, so your privacy is never at risk during troubleshooting.</p>
+    
+    <h3>Benefits of Offline Viewing</h3>
+    <p>Having videos saved offline gives you total freedom. Watch them on a plane, in a subway, or anywhere with spotty internet.</p>
+    <p>Use them in presentations, edit them later, or simply build a personal collection of useful content.</p>
+    <p>And because no watermarks are added, the files stay clean — ready to use however you like, as long as you respect the creator’s rights.</p>
+    
+    <h3>What makes this tool different?</h3>
+    <p>It never demands a login, never stamps your files with watermarks, delivers HD all the way up to 4K, and works across Android, iPhone, Windows, and Mac.</p>
+    <p>The whole experience is private — no tracking, no stored data.</p>
+    <p>And we’re a small team of developers who simply believe that downloading your own Facebook videos should be fast, free, and frictionless.</p>
+    <p>Our focus stays on performance, simplicity, and respecting your time.</p>
+    <p>Ready to give it a try? Just paste your link and your video is seconds away.</p>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-links">
+        <a href="about.html" class="footer-btn" data-key="footerAbout">About Section</a>
+        <a href="mailto:fbcostumer.service.net@gmail.com" class="footer-btn" data-key="footerContact">Contact</a>
+        <a href="privacy.html" class="footer-btn" data-key="footerPrivacy">Privacy Policy</a>
+        <a href="terms.html" class="footer-btn" data-key="footerTerms">Terms & Conditions</a>
+    </div>
+    <div class="footer-copyright" data-key="copyright">
+        &copy; 2026 downsocial.net. All rights reserved.
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
