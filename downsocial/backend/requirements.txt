@@ -1,0 +1,8 @@
+Flask
+flask-cors
+Flask-Compress
+Flask-Limiter
+gunicorn
+gevent
+requests
+yt-dlp
