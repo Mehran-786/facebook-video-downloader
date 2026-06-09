@@ -315,7 +315,7 @@ class UIManager {
 // ---------------------------------------------------------
 class DownloadManager {
     constructor() {
-        this.baseUrl = "https://facebook-video-downloader-d9yn.onrender.com"; // Ya jo bhi aapke backend ka subdomain ho
+        this.baseUrl = "https://facebook-video-downloader-wine.vercel.app/"; 
         this.btn = document.getElementById('downloadBtn');
         this.input = document.getElementById('videoUrl');
         this.status = document.getElementById('statusMessage');
@@ -323,7 +323,6 @@ class DownloadManager {
         this.videoPreview = document.getElementById('videoPreview');
         this.imagePreview = document.getElementById('imagePreview');
         
-        // Storage Key & History Elements Setup
         this.historyKey = 'fb_video_history';
         this.createSuggestionBox();
     }
@@ -356,7 +355,6 @@ class DownloadManager {
             }
         });
 
-        // Keeps dropdown positioned correctly if window changes size
         window.addEventListener('resize', () => {
             if (this.suggestionBox.classList.contains('active')) {
                 this.positionSuggestionBox();
@@ -402,14 +400,13 @@ class DownloadManager {
 
     saveToHistory(url) {
         let history = JSON.parse(localStorage.getItem(this.historyKey) || '[]');
-        history = history.filter(item => item !== url); // remove if exists to push to top
-        history.unshift(url); // push to front
-        if (history.length > 3) history = history.slice(0, 3); // enforce max length of 3
+        history = history.filter(item => item !== url); 
+        history.unshift(url); 
+        if (history.length > 3) history = history.slice(0, 3); 
         localStorage.setItem(this.historyKey, JSON.stringify(history));
     }
 
     async processDownload() {
-        // Save the input locally for processing before clearing it
         const url = this.input.value.trim();
         const transMgr = window.translationManager;
 
@@ -418,7 +415,6 @@ class DownloadManager {
             return;
         }
 
-        // Feature 1 & 2 & 3: Save to local storage history, hide dropdown, and auto-clear input
         this.saveToHistory(url);
         this.hideSuggestions();
         this.input.value = ''; 
@@ -431,13 +427,27 @@ class DownloadManager {
 
         try {
             const res = await fetch(`${this.baseUrl}/api/download?url=${encodeURIComponent(url)}`);
+            
+            // Checking if response is actually JSON and not an HTML error page
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                console.error("Backend crashed and returned HTML instead of JSON.");
+                this.onError("Backend server crashed. Please check Render logs.");
+                return;
+            }
+
             const data = await res.json();
 
-            if (data.success) this.onSuccess(data, transMgr);
-            else this.onError(data.error || "Error");
+            if (res.ok && data.success) {
+                this.onSuccess(data, transMgr);
+            } else {
+                this.onError(data.error || "Extraction failed.");
+            }
             
         } catch (err) {
-            this.onError(transMgr.getFlatTrans('errorServer', "Server error."));
+            console.error("Network/Fetch Error:", err);
+            // This happens if CORS fails or server is completely down
+            this.onError("Connection blocked or Server is down. Check CORS policy.");
         } finally {
             this.btn.innerHTML = origText;
             this.btn.disabled = false;
@@ -471,14 +481,9 @@ class DownloadManager {
         const setLink = (id, url, type) => {
             const el = document.getElementById(id);
             if (el && url) {
-                // Har video ke liye ek unique number (timestamp) generate karna
                 const uniqueId = Math.floor(Date.now() / 1000); 
                 const fileName = `FB_Video_${uniqueId}.${type}`;
-
-                // URL mein "&t=uniqueId" add kiya taake browser isey hamesha naya link samjhe
                 el.href = `${this.baseUrl}/api/direct?url=${encodeURIComponent(url)}&type=${type}&t=${uniqueId}`;
-                
-                // HTML5 download attribute use karke unique file name set karna
                 el.setAttribute('download', fileName);
             }
         };
@@ -524,19 +529,15 @@ class DownloadManager {
 // 4. Initialization & Global Expose
 // ---------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // Instantiate core managers
     window.translationManager = new TranslationManager();
     window.uiManager = new UIManager();
     window.downloadManager = new DownloadManager();
 
-    // Initialize systems
     window.uiManager.init();
     window.downloadManager.init();
     
-    // Trigger initial language load
     window.translationManager.changeLanguage(window.translationManager.currentLang);
 
-    // Safely expose changeLanguage to global scope for HTML onclick attributes
     window.changeLanguage = (lang) => {
         window.translationManager.changeLanguage(lang);
     };
