@@ -19,8 +19,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 # ==========================================
 # 🛡️ 1. STRICT CORS POLICY (SECURITY) 🛡️
 # ==========================================
-# Ab koi aur domain aapki API chori nahi kar sakti. Sirf aapki website allow hai.
-CORS(app, resources={r"/api/*": {"origins": ["https://downsocial.net", "https://www.downsocial.net"]}})
+CORS(app, resources={r"/api/*": {"origins": ["https://downsocial.net", "https://www.downsocial.net", "https://facebook-video-downloader-amber.vercel.app"]}})
 
 compress = Compress()
 compress.init_app(app)
@@ -28,21 +27,19 @@ compress.init_app(app)
 # ==========================================
 # 🛑 2. RATE LIMITING (ANTI-DDoS & SPAM PROTECTION) 🛑
 # ==========================================
-# Ye server ko bot attacks aur spam se bachayega. Ek waqt me bohot requests aane par crash nahi hoga.
 limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["5000 per day", "100 per minute"],
-    storage_uri="memory://" # High traffic ke liye memory cache use ho raha hai
+    storage_uri="memory://" 
 )
 
-# Configure Logging for Production Monitoring
+# Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # ==========================================
-# 🚀 3. ADVANCED ZERO-DEPENDENCY TTL CACHE 🚀
+# 🚀 3. TTL CACHE 🚀
 # ==========================================
-# Caches extraction results for 30 mins to prevent hitting rate limits
 class SimpleTTLCache:
     def __init__(self, ttl_seconds=1800):
         self.cache = {}
@@ -55,7 +52,7 @@ class SimpleTTLCache:
                 logging.info(f"[CACHE HIT] Serving from memory: {key}")
                 return entry['data']
             else:
-                del self.cache[key] # Expired
+                del self.cache[key]
         return None
 
     def set(self, key, value):
@@ -63,66 +60,60 @@ class SimpleTTLCache:
 
 video_cache = SimpleTTLCache(ttl_seconds=1800)
 
-# Reusable session for faster TCP connection pooling during streaming
 http_session = requests.Session()
-# Optimize connection pool for high concurrency
 adapter = requests.adapters.HTTPAdapter(pool_connections=200, pool_maxsize=500)
 http_session.mount("http://", adapter)
 http_session.mount("https://", adapter)
 
 def resolve_facebook_share_url(url):
     """
-    Resolves and un-shortens Facebook /share/ URLs and other redirects
-    using requests before passing them to yt-dlp.
+    Manually resolves redirects to avoid requests/gevent recursion depth limits.
     """
     if not url:
         return url
 
-    # Identify if URL is a Facebook share / short link
-    is_share_link = any(pattern in url for pattern in [
-        "/share/", 
-        "fb.watch", 
-        "fb.gg", 
-        "facebook.com/share"
-    ])
+    is_share_link = any(pattern in url for pattern in ["/share/", "fb.watch", "fb.gg", "facebook.com/share"])
 
     if is_share_link:
         try:
             logging.info(f"[UNSHORTENER] Resolving shortened URL: {url}")
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.9',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
-            # stream=True gets headers only, preventing downloading the full page body
-            with requests.get(url, headers=headers, allow_redirects=True, stream=True, timeout=10) as r:
-                resolved_url = r.url
-                logging.info(f"[UNSHORTENER] Successfully un-shortened: {url} -> {resolved_url}")
-                return resolved_url
+            
+            current_url = url
+            # Manually follow redirects up to 5 times
+            for _ in range(5):
+                res = http_session.head(current_url, headers=headers, allow_redirects=False, timeout=5)
+                if res.status_code in [301, 302, 303, 307, 308] and 'Location' in res.headers:
+                    current_url = res.headers['Location']
+                else:
+                    break
+                    
+            logging.info(f"[UNSHORTENER] Successfully un-shortened: {url} -> {current_url}")
+            return current_url
         except Exception as e:
             logging.error(f"[UNSHORTENER ERROR] Failed to un-shorten URL: {str(e)}")
+            
     return url
 
 # ==========================================
-# 🎯 ROUTE 1: ADVANCED EXTRACTION ENGINE 🎯
+# 🎯 ROUTE 1: EXTRACTION ENGINE 🎯
 # ==========================================
 @app.route('/api/download', methods=['GET'])
-@limiter.limit("15 per minute") # Ek user 1 minute me 15 se zyada videos extract nahi kar sakta
+@limiter.limit("15 per minute")
 def download_video():
     url = request.args.get('url')
     
     if not url:
         return jsonify({"success": False, "error": "URL is required!"}), 400
 
-    # Resolve shortened/share URLs to final destination URLs
     resolved_url = resolve_facebook_share_url(url)
 
-    # Check Cache First with resolved URL
     cached_data = video_cache.get(resolved_url)
     if cached_data:
         return jsonify(cached_data)
 
-    # Configure yt-dlp for maximum speed and stealth
     ydl_opts = {
         'quiet': True,
         'no_warnings': True,
@@ -138,11 +129,7 @@ def download_video():
     }
 
     # Integrate cookies.txt if it exists to bypass walls and IP blockades
-    cookie_paths = [
-        os.path.join(os.path.dirname(__file__), 'cookies.txt'),
-        'cookies.txt',
-        'backend/cookies.txt'
-    ]
+    cookie_paths = [os.path.join(os.path.dirname(__file__), 'cookies.txt'), 'cookies.txt', 'backend/cookies.txt']
     for cp in cookie_paths:
         if os.path.exists(cp):
             ydl_opts['cookiefile'] = cp
@@ -161,7 +148,6 @@ def download_video():
 
             media_type = "image" if info.get('_type') == 'url_transparent' and not info.get('formats') else "video"
             
-            # Default fallbacks
             video_high = info.get('url')
             video_normal = info.get('url')
             audio_high = info.get('url')
@@ -169,7 +155,6 @@ def download_video():
 
             formats = info.get('formats', [])
 
-            # Intelligent Format Sorting (HD vs SD mapping)
             if formats:
                 merged_formats = [f for f in formats if f.get('vcodec') != 'none' and f.get('acodec') != 'none']
                 audio_formats = [f for f in formats if f.get('vcodec') == 'none' and f.get('acodec') != 'none']
@@ -199,28 +184,31 @@ def download_video():
                 "audio_normal": audio_normal
             }
 
-            # Save to memory cache
             video_cache.set(resolved_url, response_data)
-            
             logging.info("[EXTRACTION SUCCESS] Formats successfully mapped.")
             return jsonify(response_data)
 
     except yt_dlp.utils.DownloadError as de:
         logging.error(f"[EXTRACTION ERROR] yt-dlp error: {str(de)}")
-        return jsonify({"success": False, "error": "Could not extract video. It might be private or deleted."}), 400
+        return jsonify({"success": False, "error": "Could not extract video. It might be private or require login."}), 400
     except Exception as e:
-        logging.error(f"[SERVER ERROR] Unexpected error: {str(e)}")
+        error_msg = str(e)
+        logging.error(f"[SERVER ERROR] Unexpected error: {error_msg}")
+        
+        # Specific check to handle yt-dlp NoneType crashes gracefully
+        if "NoneType" in error_msg:
+            return jsonify({"success": False, "error": "Facebook blocked the request. Please provide cookies or check if the video is private."}), 400
+            
         return jsonify({"success": False, "error": "Internal server error during extraction."}), 500
 
 # ==========================================
 # ⚡ ROUTE 2: ADVANCED STREAMING PROXY ⚡
 # ==========================================
 @app.route('/api/direct', methods=['GET'])
-@limiter.limit("20 per minute") # Proxy bandwidth abuse rokne ke liye limit
+@limiter.limit("20 per minute")
 def direct_download():
     file_url = request.args.get('url')
     file_type = request.args.get('type', 'mp4')
-    
     timestamp_id = request.args.get('t', str(int(time.time())))
     
     if not file_url:
@@ -236,7 +224,6 @@ def direct_download():
         if range_header:
             headers['Range'] = range_header
 
-        # Timeout limits set to prevent infinite hanging
         req = http_session.get(file_url, stream=True, headers=headers, timeout=(5, 30))
         
         resp_headers = {
@@ -252,7 +239,6 @@ def direct_download():
 
         status_code = req.status_code if req.status_code in [200, 206] else 200
 
-        # Efficient chunk generator (Yields 1MB at a time to save RAM)
         def generate_chunks():
             try:
                 for chunk in req.iter_content(chunk_size=1024 * 1024):
@@ -281,14 +267,9 @@ def direct_download():
         logging.error(f"[PROXY UNKNOWN ERROR] {str(e)}")
         return jsonify({"error": "An unexpected error occurred during stream."}), 500
 
-# Basic Health Check
 @app.route('/', methods=['GET'])
 def health_check():
     return jsonify({"status": "active", "service": "Facebook Video Downloader API API v2.0"}), 200
 
 if __name__ == '__main__':
-    # ⚠️ WARNING FOR PRODUCTION ⚠️
-    # Ye app.run sirf development/testing ke liye hai.
-    # max requests ke liye apne paid server par GUNICORN aur GEVENT use karein.
-    # Command: gunicorn -k gevent -w 8 --worker-connections 1000 -b 0.0.0.0:5000 app:app
     app.run(host='0.0.0.0', port=5000, threaded=True)
