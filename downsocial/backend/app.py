@@ -1,12 +1,4 @@
-# Monkey-patching for gevent asynchronous workers (must be done before other imports)
 import os
-try:
-    from gevent import monkey
-    monkey.patch_all()
-    print("[GEVENT] Monkey patching applied successfully.")
-except ImportError:
-    print("[GEVENT] gevent not found, running without monkey patching.")
-
 import time
 import logging
 from flask import Flask, request, jsonify, Response, stream_with_context
@@ -78,7 +70,6 @@ adapter = requests.adapters.HTTPAdapter(pool_connections=200, pool_maxsize=500)
 http_session.mount("http://", adapter)
 http_session.mount("https://", adapter)
 
-
 def resolve_facebook_share_url(url):
     """
     Resolves and un-shortens Facebook /share/ URLs and other redirects
@@ -111,7 +102,6 @@ def resolve_facebook_share_url(url):
         except Exception as e:
             logging.error(f"[UNSHORTENER ERROR] Failed to un-shorten URL: {str(e)}")
     return url
-
 
 # ==========================================
 # 🎯 ROUTE 1: ADVANCED EXTRACTION ENGINE 🎯
@@ -221,7 +211,6 @@ def download_video():
     except Exception as e:
         logging.error(f"[SERVER ERROR] Unexpected error: {str(e)}")
         return jsonify({"success": False, "error": "Internal server error during extraction."}), 500
-
 
 # ==========================================
 # ⚡ ROUTE 2: ADVANCED STREAMING PROXY ⚡
