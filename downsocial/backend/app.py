@@ -19,7 +19,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 # ==========================================
 # 🛡️ 1. STRICT CORS POLICY (SECURITY) 🛡️
 # ==========================================
-CORS(app, resources={r"/api/*": {"origins": ["https://downsocial.net", "https://www.downsocial.net", "https://facebook-video-downloader-amber.vercel.app"]}})
+CORS(app, resources={r"/api/*": {"origins": ["https://downsocial.net", "https://www.downsocial.net", "https://facebook-video-downloader-wine.vercel.app/"]}})
 
 compress = Compress()
 compress.init_app(app)
